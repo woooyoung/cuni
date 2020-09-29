@@ -8,4 +8,6 @@ public interface ArticleService {
 
 	List<Article> getArticles();
 
+	Article getArticle(int id);
+
 }
