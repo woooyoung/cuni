@@ -9,20 +9,13 @@
 		id
 		DESC
 	</select>
-
+	
 	<select id="getArticle" resultType="Article">
 		SELECT *
 		FROM article
-		WHERE id
+		WHERE id 
 		= #{id}
 	</select>
-
-	<delete id="deleteArticle">
-		DELETE
-		FROM article
-		WHERE id
-		= #{id}
-	</delete>
 
 	<!-- <select id="getOne" parameterType="long" resultType="Article"> SELECT 
 		* FROM article WHERE id = #{id} </select> <select id="getTotalCount" parameterType="map" 

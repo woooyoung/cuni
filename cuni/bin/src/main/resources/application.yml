@@ -8,8 +8,8 @@ spring:
   datasource:
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
     url: jdbc:log4jdbc:mysql://127.0.0.1:3306/cuni?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC # DB명 치환
-    username: root # DB아이디 치환
-    password: ghfkddl1!! # DB비번 치환
+    username: sbsst # DB아이디 치환
+    password: sbs123414 # DB비번 치환
   servlet:
     multipart:
       enabled: true

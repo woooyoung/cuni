@@ -11,5 +11,7 @@ import com.example.sbs.cuni.dto.Article;
 public interface ArticleDao {
 	List<Article> getArticles();
 
-	Article getArticle(@Param("id")  int id);
+	Article getArticle(@Param("id") int id);
+
+	void deleteArticle(@Param("id") int id);
 }
