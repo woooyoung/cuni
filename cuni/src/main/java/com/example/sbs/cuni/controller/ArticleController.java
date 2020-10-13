@@ -38,6 +38,31 @@ public class ArticleController {
 		return "article/detail";
 	}
 
+	@RequestMapping("article/modify")
+	public String showModify(Model model, int id) {
+		Article article = articleService.getArticle(id);
+
+		model.addAttribute("article", article);
+
+		return "article/modify";
+	}
+
+	@RequestMapping("article/doModify")
+	public String doModify(Model model, @RequestParam Map<String, Object> param) {
+
+		Map<String, Object> rs = articleService.modify(param);
+
+		int id = Integer.parseInt((String) param.get("id"));
+
+		String msg = (String) rs.get("msg");
+		String redirectUrl = "/article/detail?id=" + id;
+
+		model.addAttribute("alertMSg", msg);
+		model.addAttribute("locationReplace", redirectUrl);
+
+		return "common/redirect";
+	}
+
 	@RequestMapping("article/doDelete")
 	public String doDelete(Model model, int id) {
 		Map<String, Object> rs = articleService.deleteArticle(id);
