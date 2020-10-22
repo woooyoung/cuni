@@ -39,6 +39,16 @@ public class ArticleController {
 
 	@RequestMapping("article/modify")
 	public String showModify(Model model, int id, HttpServletRequest request) {
+		int loginedMemberId = (int) request.getAttribute("loginedMemberId");
+
+		Map<String, Object> articleModifyAvailableRs = articleService.getArticleModifyAvailable(id, loginedMemberId);
+
+		if (((String) articleModifyAvailableRs.get("resultCode")).startsWith("F-")) {
+			model.addAttribute("alertMsg", articleModifyAvailableRs.get("msg"));
+			model.addAttribute("historyBack", true);
+
+			return "common/redirect";
+		}
 
 		Article article = articleService.getArticle(id);
 
@@ -47,11 +57,19 @@ public class ArticleController {
 	}
 
 	@RequestMapping("article/doModify")
-	public String doModify(Model model, @RequestParam Map<String, Object> param) {
+	public String doModify(Model model, @RequestParam Map<String, Object> param, HttpServletRequest request) {
+		int loginedMemberId = (int) request.getAttribute("loginedMemberId");
+		int id = Integer.parseInt((String) param.get("id"));
+		Map<String, Object> articleModifyAvailableRs = articleService.getArticleModifyAvailable(id, loginedMemberId);
+
+		if (((String) articleModifyAvailableRs.get("resultCode")).startsWith("F-")) {
+			model.addAttribute("alertMsg", articleModifyAvailableRs.get("msg"));
+			model.addAttribute("historyBack", true);
+
+			return "common/redirect";
+		}
 
 		Map<String, Object> rs = articleService.modify(param);
-
-		int id = Integer.parseInt((String) param.get("id"));
 		String msg = (String) rs.get("msg");
 		String redirectUrl = "/article/detail?id=" + id;
 		model.addAttribute("alertMsg", msg);
@@ -60,8 +78,18 @@ public class ArticleController {
 	}
 
 	@RequestMapping("article/doDelete")
-	public String doDelete(Model model, int id) {
+	public String doDelete(Model model, int id, HttpServletRequest request) {
 
+		int loginedMemberId = (int) request.getAttribute("loginedMemberId");
+
+		Map<String, Object> articleDeleteAvailableRs = articleService.getArticleDeleteAvailable(id, loginedMemberId);
+
+		if (((String) articleDeleteAvailableRs.get("resultCode")).startsWith("F-")) {
+			model.addAttribute("alertMsg", articleDeleteAvailableRs.get("msg"));
+			model.addAttribute("historyBack", true);
+
+			return "common/redirect";
+		}
 		Map<String, Object> rs = articleService.deleteArticle(id);
 
 		String msg = (String) rs.get("msg");
