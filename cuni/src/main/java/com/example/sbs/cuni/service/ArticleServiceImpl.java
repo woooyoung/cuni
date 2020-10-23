@@ -101,4 +101,9 @@ public class ArticleServiceImpl implements ArticleService {
 		return rs;
 	}
 
+	@Override
+	public void increaseArticleHit(int id) {
+		articleDao.increaseArticleHit(id);
+	}
+
 }
