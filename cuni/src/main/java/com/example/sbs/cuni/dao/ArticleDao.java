@@ -28,4 +28,8 @@ public interface ArticleDao {
 	void modifyArticle(Map<String, Object> param);
 
 	void increaseArticleHit(@Param("id") int id);
+
+	Article getForPrintArticle(int id);
+
+	List<Article> getForPrintArticlesByBoardCode(String boardCode);
 }
