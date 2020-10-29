@@ -17,6 +17,7 @@ public class ArticleServiceImpl implements ArticleService {
 	@Autowired
 	private ArticleDao articleDao;
 
+	@Override
 	public List<Article> getArticles() {
 		return articleDao.getArticles();
 	}
@@ -30,8 +31,10 @@ public class ArticleServiceImpl implements ArticleService {
 	public Map<String, Object> deleteArticle(int id) {
 		articleDao.deleteArticle(id);
 		Map<String, Object> rs = new HashMap<>();
+
 		rs.put("resultCode", "S-1");
 		rs.put("msg", String.format("%d번 게시물이 삭제되었습니다.", id));
+
 		return rs;
 	}
 
@@ -98,6 +101,7 @@ public class ArticleServiceImpl implements ArticleService {
 		String msg = (String) rs.get("msg");
 		msg = msg.replace("수정", "삭제");
 		rs.put("msg", msg);
+
 		return rs;
 	}
 
@@ -107,13 +111,41 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 
 	@Override
-	public List<Article> getForPrintArticles(String boardCode) {
-		return articleDao.getForPrintArticlesByBoardCode(boardCode);
+	public List<Article> getForPrintArticles(String boardCode, int actorMemberId) {
+		List<Article> articles = articleDao.getForPrintArticlesByBoardCode(boardCode);
+
+		for (Article article : articles) {
+			updateMoreInfoForPrint(article, actorMemberId);
+		}
+
+		return articles;
+	}
+
+	private void updateMoreInfoForPrint(Article article, int actorMemberId) {
+		if ( actorMemberId == 0 ) {
+			article.getExtra().put("loginedMemberCanLike", false);
+			article.getExtra().put("loginedMemberCanCancelLike", false);
+			
+			return;
+		}
+		
+		int likePoint = articleDao.getLikePointByMemberId(article.getId(), actorMemberId);
+
+		if (likePoint == 0) {
+			article.getExtra().put("loginedMemberCanLike", true);
+			article.getExtra().put("loginedMemberCanCancelLike", false);
+		} else {
+			article.getExtra().put("loginedMemberCanLike", false);
+			article.getExtra().put("loginedMemberCanCancelLike", true);
+		}
 	}
 
 	@Override
-	public Article getForPrintArticle(int id) {
-		return articleDao.getForPrintArticle(id);
+	public Article getForPrintArticle(int id, int actorMemberId) {
+		Article article = articleDao.getForPrintArticle(id);
+		updateMoreInfoForPrint(article, actorMemberId);
+
+		return article;
 	}
 
 	@Override
@@ -137,6 +169,7 @@ public class ArticleServiceImpl implements ArticleService {
 
 			return rs;
 		}
+
 		rs.put("resultCode", "S-1");
 		rs.put("msg", "가능합니다.");
 
@@ -155,4 +188,34 @@ public class ArticleServiceImpl implements ArticleService {
 		return rs;
 	}
 
+	@Override
+	public Map<String, Object> getArticleCancelLikeAvailable(int id, int actorMemberId) {
+		Map<String, Object> rs = new HashMap<>();
+
+		int likePoint = articleDao.getLikePointByMemberId(id, actorMemberId);
+
+		if (likePoint == 0) {
+			rs.put("resultCode", "F-1");
+			rs.put("msg", "추천하신 분만 취소가 가능합니다.");
+
+			return rs;
+		}
+
+		rs.put("resultCode", "S-1");
+		rs.put("msg", "가능합니다.");
+
+		return rs;
+	}
+
+	@Override
+	public Map<String, Object> cancelLikeArticle(int id, int actorMemberId) {
+		articleDao.cancelLikeArticle(id, actorMemberId);
+
+		Map<String, Object> rs = new HashMap<>();
+
+		rs.put("resultCode", "S-1");
+		rs.put("msg", String.format("%d번 게시물 추천을 취소하였습니다.", id));
+
+		return rs;
+	}
 }
