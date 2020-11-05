@@ -143,7 +143,7 @@ public class ArticleController {
 
 		return "common/redirect";
 	}
-	
+
 	@RequestMapping("article/doLike")
 	public String doLike(Model model, int id, String redirectUrl, HttpServletRequest request) {
 
@@ -161,17 +161,16 @@ public class ArticleController {
 		Map<String, Object> rs = articleService.likeArticle(id, loginedMemberId);
 
 		String msg = (String) rs.get("msg");
-		
+
 		model.addAttribute("alertMsg", msg);
 		model.addAttribute("locationReplace", redirectUrl);
 
 		return "common/redirect";
 	}
-	
+
 	@RequestMapping("article/doLikeAjax")
 	@ResponseBody
-	public Map<String, Object> doLikeAjax(Model model, int id, HttpServletRequest request) {
-
+	public Map<String, Object> doLikeAjax(int id, HttpServletRequest request) {
 		Map<String, Object> rs = new HashMap<>();
 		int loginedMemberId = (int) request.getAttribute("loginedMemberId");
 
@@ -197,14 +196,45 @@ public class ArticleController {
 
 		return rs;
 	}
-	
+
+	@RequestMapping("article/doCancelLikeAjax")
+	@ResponseBody
+	public Map<String, Object> doCancelLikeAjax(int id, HttpServletRequest request) {
+
+		Map<String, Object> rs = new HashMap<>();
+		int loginedMemberId = (int) request.getAttribute("loginedMemberId");
+
+		Map<String, Object> articleCancelLikeAvailableRs = articleService.getArticleCancelLikeAvailable(id,
+				loginedMemberId);
+
+		if (((String) articleCancelLikeAvailableRs.get("resultCode")).startsWith("F-")) {
+			rs.put("resultCode", articleCancelLikeAvailableRs.get("resultCode"));
+			rs.put("msg", articleCancelLikeAvailableRs.get("msg"));
+
+			return rs;
+		}
+
+		Map<String, Object> cancelLikeArticleRs = articleService.cancelLikeArticle(id, loginedMemberId);
+
+		String resultCode = (String) cancelLikeArticleRs.get("resultCode");
+		String msg = (String) cancelLikeArticleRs.get("msg");
+
+		int likePoint = articleService.getLikePoint(id);
+
+		rs.put("resultCode", resultCode);
+		rs.put("msg", msg);
+		rs.put("likePoint", likePoint);
+
+		return rs;
+	}
+
 	@RequestMapping("article/doCancelLike")
 	public String doCancelLike(Model model, int id, String redirectUrl, HttpServletRequest request) {
 
 		int loginedMemberId = (int) request.getAttribute("loginedMemberId");
 
-		Map<String, Object> articleCancelLikeAvailable = articleService.getArticleCancelLikeAvailable(id, loginedMemberId);
-
+		Map<String, Object> articleCancelLikeAvailable = articleService.getArticleCancelLikeAvailable(id,
+				loginedMemberId);
 		if (((String) articleCancelLikeAvailable.get("resultCode")).startsWith("F-")) {
 			model.addAttribute("alertMsg", articleCancelLikeAvailable.get("msg"));
 			model.addAttribute("historyBack", true);
@@ -215,10 +245,11 @@ public class ArticleController {
 		Map<String, Object> rs = articleService.cancelLikeArticle(id, loginedMemberId);
 
 		String msg = (String) rs.get("msg");
-		
+
 		model.addAttribute("alertMsg", msg);
 		model.addAttribute("locationReplace", redirectUrl);
 
 		return "common/redirect";
 	}
+
 }
