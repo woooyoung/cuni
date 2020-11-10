@@ -1,4 +1,5 @@
 DROP DATABASE IF EXISTS cuni;
+
 CREATE DATABASE cuni;
 
 USE cuni;
@@ -35,11 +36,14 @@ CREATE TABLE board (
   `name` VARCHAR(50) NOT NULL,
   `code` CHAR(50) NOT NULL
 );
+
 ALTER TABLE board ADD INDEX (`code`);
+
 INSERT INTO board
 SET regDate = NOW(),
 `name` = '공지사항',
 `code` = 'notice';
+
 INSERT INTO board
 SET regDate = NOW(),
 `name` = '자유게시판',
