@@ -26,6 +26,16 @@ a {
 	border: 1px solid black;
 }
 
+.table-box>table input[type="text"], .table-box>table input[type="number"],
+	.table-box>table input[type="tel"], .table-box>table textarea {
+	width:90%;
+}
+
+.height-100px {
+	height: 100px !important;
+}
+
+
 /* 커스텀 */
 .con {
 	margin-left: auto;
