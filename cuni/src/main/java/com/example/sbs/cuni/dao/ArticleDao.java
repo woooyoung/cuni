@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.example.sbs.cuni.dto.Article;
+import com.example.sbs.cuni.dto.ArticleReply;
 import com.example.sbs.cuni.dto.Board;
 
 @Mapper
@@ -30,6 +31,7 @@ public interface ArticleDao {
 	void increaseArticleHit(@Param("id") int id);
 
 	Article getForPrintArticle(int id);
+
 	List<Article> getForPrintArticlesByBoardCode(String boardCode);
 
 	int getLikePointByMemberId(@Param("id") int id, @Param("memberId") int memberId);
@@ -37,8 +39,10 @@ public interface ArticleDao {
 	void likeArticle(@Param("id") int id, @Param("memberId") int memberId);
 
 	void cancelLikeArticle(@Param("id") int id, @Param("memberId") int memberId);
-	
+
 	int getLikePoint(@Param("id") int id);
 
 	void writeArticleReply(Map<String, Object> param);
+
+	List<ArticleReply> getForPrintArticleReplies(@Param("articleId") int articleId);
 }
