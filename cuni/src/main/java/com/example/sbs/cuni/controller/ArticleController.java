@@ -46,8 +46,27 @@ public class ArticleController {
 		List<ArticleReply> articleReplies = articleService.getForPrintArticleReplies(article.getId());
 
 		model.addAttribute("articleReplies", articleReplies);
-
 		return "article/detail";
+	}
+	
+	@RequestMapping("article/modifyReply")
+	public String showModifyReply(Model model, int id, HttpServletRequest request) {
+		int loginedMemberId = (int) request.getAttribute("loginedMemberId");
+
+		Map<String, Object> articleModifyReplyAvailableRs = articleService.getArticleModifyReplyAvailable(id, loginedMemberId);
+
+		if (((String) articleModifyReplyAvailableRs.get("resultCode")).startsWith("F-")) {
+			model.addAttribute("alertMsg", articleModifyReplyAvailableRs.get("msg"));
+			model.addAttribute("historyBack", true);
+
+			return "common/redirect";
+		}
+
+		ArticleReply articleReply = articleService.getForPrintArticleReply(id, loginedMemberId);
+
+		model.addAttribute("articleReply", articleReply);
+
+		return "article/modifyReply";
 	}
 
 	@RequestMapping("article/modify")
@@ -88,6 +107,56 @@ public class ArticleController {
 
 		String msg = (String) rs.get("msg");
 		String redirectUrl = "/article/detail?id=" + id;
+
+		model.addAttribute("alertMsg", msg);
+		model.addAttribute("locationReplace", redirectUrl);
+
+		return "common/redirect";
+	}
+	
+	@RequestMapping("article/doModifyReply")
+	public String doModifyReply(Model model, @RequestParam Map<String, Object> param, HttpServletRequest request) {
+		int loginedMemberId = (int) request.getAttribute("loginedMemberId");
+
+		int id = Integer.parseInt((String) param.get("id"));
+		Map<String, Object> articleModifyReplyAvailableRs = articleService.getArticleModifyReplyAvailable(id, loginedMemberId);
+
+		if (((String) articleModifyReplyAvailableRs.get("resultCode")).startsWith("F-")) {
+			model.addAttribute("alertMsg", articleModifyReplyAvailableRs.get("msg"));
+			model.addAttribute("historyBack", true);
+
+			return "common/redirect";
+		}
+
+		Map<String, Object> rs = articleService.modifyReply(param);
+
+		String msg = (String) rs.get("msg");
+		String redirectUrl = (String) param.get("redirectUrl");
+
+		model.addAttribute("alertMsg", msg);
+		model.addAttribute("locationReplace", redirectUrl);
+
+		return "common/redirect";
+	}
+	
+	@RequestMapping("article/doDeleteReply")
+	public String doDeleteReply(Model model, int id, String redirectUrl, HttpServletRequest request) {
+
+		int loginedMemberId = (int) request.getAttribute("loginedMemberId");
+
+		Map<String, Object> articleReplyDeleteAvailableRs = articleService.getArticleReplyDeleteAvailable(id,
+				loginedMemberId);
+
+		if (((String) articleReplyDeleteAvailableRs.get("resultCode")).startsWith("F-")) {
+			model.addAttribute("alertMsg", articleReplyDeleteAvailableRs.get("msg"));
+			model.addAttribute("historyBack", true);
+
+			return "common/redirect";
+		}
+
+		Map<String, Object> rs = articleService.deleteArticleReply(id);
+
+		String msg = (String) rs.get("msg");
 
 		model.addAttribute("alertMsg", msg);
 		model.addAttribute("locationReplace", redirectUrl);
@@ -192,7 +261,6 @@ public class ArticleController {
 	@RequestMapping("article/doLikeAjax")
 	@ResponseBody
 	public Map<String, Object> doLikeAjax(int id, HttpServletRequest request) {
-
 		Map<String, Object> rs = new HashMap<>();
 		int loginedMemberId = (int) request.getAttribute("loginedMemberId");
 
@@ -257,7 +325,6 @@ public class ArticleController {
 
 		Map<String, Object> articleCancelLikeAvailable = articleService.getArticleCancelLikeAvailable(id,
 				loginedMemberId);
-
 		if (((String) articleCancelLikeAvailable.get("resultCode")).startsWith("F-")) {
 			model.addAttribute("alertMsg", articleCancelLikeAvailable.get("msg"));
 			model.addAttribute("historyBack", true);
@@ -274,4 +341,5 @@ public class ArticleController {
 
 		return "common/redirect";
 	}
+
 }

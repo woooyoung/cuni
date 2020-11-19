@@ -93,6 +93,7 @@
 		</tbody>
 	</table>
 </div>
+
 <c:if test="${isLogined}">
 	<h2 class="con">댓글 작성</h2>
 
@@ -115,6 +116,7 @@
 			</table>
 		</div>
 	</form>
+
 </c:if>
 
 <h2 class="con">댓글 리스트</h2>
