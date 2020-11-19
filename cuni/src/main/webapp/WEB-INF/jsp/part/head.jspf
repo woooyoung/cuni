@@ -13,12 +13,16 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 
 <script>
-var param = ${paramJson};
+	var param = $
+	{
+		paramJson
+	};
 </script>
 
 </head>
 <body>
 	<h1 class="con">${pageName}</h1>
+
 	<div class="menu-bar con">
 		<c:if test="${isLogined}">
 			<span>${loginedMember.name}님 환영합니다.</span>

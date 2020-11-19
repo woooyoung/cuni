@@ -8,7 +8,7 @@ body, ul, li {
 }
 
 a {
-
+	
 }
 
 /* 라이브러리 */
@@ -28,20 +28,19 @@ a {
 
 .table-box>table input[type="text"], .table-box>table input[type="number"],
 	.table-box>table input[type="tel"], .table-box>table textarea {
-	width:90%;
+	width: 90%;
 }
 
 .height-100px {
-height: 100px;
+	height: 100px;
 }
 
 .height-200px {
 	height: 200px;
 }
 
-
 /* 커스텀 */
 .con {
 	margin-left: auto;
 	margin-right: auto;
-} 
+}

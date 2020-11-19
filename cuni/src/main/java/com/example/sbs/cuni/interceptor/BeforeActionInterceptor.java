@@ -49,11 +49,9 @@ public class BeforeActionInterceptor implements HandlerInterceptor {
 		String paramJson = mapper.writeValueAsString(param);
 
 		String requestUri = request.getRequestURI();
-
 		String queryString = request.getQueryString();
 
 		String requesturiQueryString = requestUri;
-
 		if (queryString != null && queryString.length() > 0) {
 			requesturiQueryString += "?" + queryString;
 		}
@@ -66,7 +64,6 @@ public class BeforeActionInterceptor implements HandlerInterceptor {
 		request.setAttribute("paramJson", paramJson);
 
 		boolean isAjax = requestUri.endsWith("Ajax");
-
 		request.setAttribute("isAjax", isAjax);
 
 		HttpSession session = request.getSession();

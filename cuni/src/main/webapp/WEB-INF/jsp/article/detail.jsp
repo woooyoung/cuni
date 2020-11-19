@@ -93,7 +93,6 @@
 		</tbody>
 	</table>
 </div>
-
 <c:if test="${isLogined}">
 	<h2 class="con">댓글 작성</h2>
 
@@ -105,8 +104,8 @@
 				<tbody>
 					<tr>
 						<th>내용</th>
-						<td><textarea maxlength="300" class="height-100px"
-								name="body" placeholder="내용을 입력해주세요."></textarea></td>
+						<td><textarea class="height-100px" name="body"
+								placeholder="내용을 입력해주세요."></textarea></td>
 					</tr>
 					<tr>
 						<th>작성</th>
@@ -116,7 +115,6 @@
 			</table>
 		</div>
 	</form>
-
 </c:if>
 
 <h2 class="con">댓글 리스트</h2>
@@ -146,13 +144,7 @@
 					<td>${articleReply.regDate}</td>
 					<td>${articleReply.extra.writer}</td>
 					<td>${articleReply.body}</td>
-					<td><a
-						href="./doDeleteReply?id=${articleReply.id}&redirectUrl=${urlEncodedRequestUriQueryString}"
-						onclick="if ( confirm('삭제하시겠습니까?') == false ) { return false; }">삭제</a>
-
-						<a
-						href="./modifyReply?id=${articleReply.id}&redirectUrl=${urlEncodedRequestUriQueryString}">수정</a>
-					</td>
+					<td></td>
 				</tr>
 			</c:forEach>
 		</tbody>
